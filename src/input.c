@@ -100,7 +100,7 @@ int get_input(WINDOW *input_win, WINDOW *chat_win)
     wrefresh(input_win);
 
     while (1) {
-        ch = wgetch(input_win);
+        ch = wgetch(input_win) ;
 
         if (ch == '\n') { 
             buffer[buf_len] = '\0';
