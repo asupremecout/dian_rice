@@ -123,6 +123,48 @@ int get_input(WINDOW *input_win, WINDOW *chat_win)
                         return 0;
                     }
 
+
+
+
+                    if(strcmp(dest1,"/exec")==0){
+
+                        
+                        char *filename = buffer + 5; 
+                        char *word_str;
+                        char result[MAX_INPUT_LENGTH];
+                        char rest_command[MAX_INPUT_LENGTH];
+                        char *p=rest_command;
+                        char *space_str = strchr(filename, ' ');
+                        if (space_str != NULL) {
+                            *space_str = '\0'; 
+                            word_str = space_str + 1; 
+                             while (*word_str == ' ') {
+                                word_str++; 
+                            }
+                        }
+
+                        while(!word_str){
+                            *p=*word_str;
+                            p++;
+                            word_str++;
+                        }
+                        
+                        FILE * result_store=fopen("store","a");
+
+                        result_store=popen(rest_command,"a");
+
+                        char line[MAX_INPUT_LENGTH];
+                            while (fgets(line, sizeof(line), result_store) != NULL) 
+                            {
+                                wprintw(chat_win, "%s", line); 
+                                wrefresh(chat_win); 
+                            }
+                            fclose(result_store);
+
+                            return 0;
+
+                    }
+
                 }
                 
                 if (strcmp(buffer, "/exit") == 0) {
@@ -162,3 +204,4 @@ int get_input(WINDOW *input_win, WINDOW *chat_win)
         }
     }
 }
+

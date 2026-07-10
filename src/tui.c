@@ -14,6 +14,7 @@
 #include <string.h>
 #include "utils.h"
 #include "input.h"
+#include "input.c"
 
 //编译命令：gcc -I include -o tui src/tui.c src/utils.c -lncurses
 //执行命令：./tui
