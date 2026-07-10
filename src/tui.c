@@ -5,22 +5,48 @@
 #include <unistd.h>
 #include <time.h>
 #include<string.h>
+#include<input.h>
+#include <stdio.h>
+#include <ncurses.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <time.h>
+#include <string.h>
+#include "utils.h"
+#include "input.h"
+
 //编译命令：gcc -I include -o tui src/tui.c src/utils.c -lncurses
 //执行命令：./tui
 #define PATH_MAX 4096
 int main()
-{
+{   
 
-    initscr();            //初始化屏幕,stdscr作为主窗口
+    initscr();
+    cbreak();
+    noecho();
+    keypad(stdscr, TRUE); //功能键 back
+    
 
-    WINDOW *status_win=create_newwin(3, COLS, 0, 0); //创建状态窗口，来保持状态栏
-    WINDOW *main_win=create_newwin(LINES-5, COLS, 3, 0); //创建主窗口
+    int input_height = 5;
+    int status_height = 5;
+    int chat_height = LINES - input_height - status_height;
+    
 
+    WINDOW *status_win=create_newwin(status_height, COLS, 0, 0); //创建状态窗口，来保持状态栏
+    WINDOW *main_win=create_newwin(input_height, COLS, 3, 0); //创建主窗口
+
+    WINDOW *chat_win = newwin(chat_height, COLS, 0, 0);
+    scrollok(chat_win, TRUE);
+    wrefresh(chat_win);
+
+    
     wprintw(main_win, "Hello, World!"); //在主窗口打印文本
     wrefresh(main_win); //刷新主窗口
-    sleep(3);
-    char cwd[PATH_MAX];
+    //sleep(3);
     
+
+    //print要求的status_win的信息
+    char cwd[PATH_MAX];
     if (getcwd(cwd, sizeof(cwd)) != NULL) {
         //这里检查当前工作目录是否在/home下，如果是，则将/home替换为~
         if(strncmp(cwd, "/home/", 6) == 0) {
@@ -35,21 +61,22 @@ int main()
     } else {
         wprintw(status_win, "\ncannot get current working directory");
     }
-
     time_t rawtime;
     struct tm * timeinfo;
     time(&rawtime);
     timeinfo = localtime(&rawtime);
     wprintw(status_win, "\nCurrent time: %s", asctime(timeinfo)); //在状态窗口打印当前时间
     wrefresh(status_win); //刷新状态窗口
-    sleep(3);
-
-    wprintw(status_win, "Status: Running"); //在状态窗口打印状态信息
-    wrefresh(status_win); //刷新状态窗口
-    sleep(3);
-    refresh();            //刷新屏幕显示
-    getch();              //等待用户按键，否则程序退出
+    //sleep(3);
+    
+    int running = 1;
+    while (running) {
+        int exit_signal = get_input(main_win, chat_win);
+        if (exit_signal) {
+            running = 0;
+        }
+    }
     endwin();             //结束窗口
-
     return 0;
 }
+
