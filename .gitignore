@@ -1,0 +1,5 @@
+tui
+src/tui
+src/test
+src/output/
+*.o
