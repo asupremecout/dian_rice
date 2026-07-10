@@ -31,7 +31,11 @@ int get_input(WINDOW *input_win, WINDOW *chat_win)
     int ch;
     buf_len = 0;
     buffer[0] = '\0';
-   
+    
+
+
+
+
     werase(input_win); 
     box(input_win, 0, 0);
     mvwprintw(input_win, 1, 1, "> ");//固定>在这里
@@ -51,7 +55,8 @@ int get_input(WINDOW *input_win, WINDOW *chat_win)
                     char response[MAX_INPUT_LENGTH] = "429Too many Requests\n,服务器繁忙，请稍后再试\n"; 
                     wprintw(chat_win, "%s", response);
                     wrefresh(chat_win);
-
+                    
+                    
                     
                 }
                 else {
@@ -133,7 +138,8 @@ int get_input(WINDOW *input_win, WINDOW *chat_win)
                         char *word_str;
                         char result[MAX_INPUT_LENGTH];
                         char rest_command[MAX_INPUT_LENGTH];
-                        char *p=rest_command;
+                        char *p;
+                        p=rest_command;
                         char *space_str = strchr(filename, ' ');
                         if (space_str != NULL) {
                             *space_str = '\0'; 
@@ -148,10 +154,11 @@ int get_input(WINDOW *input_win, WINDOW *chat_win)
                             p++;
                             word_str++;
                         }
-                        
-                        FILE * result_store=fopen("store","a");
 
-                        result_store=popen(rest_command,"a");
+                        
+
+                        FILE * result_store=popen(rest_command,"r");
+                        
 
                         char line[MAX_INPUT_LENGTH];
                             while (fgets(line, sizeof(line), result_store) != NULL) 
@@ -159,8 +166,14 @@ int get_input(WINDOW *input_win, WINDOW *chat_win)
                                 wprintw(chat_win, "%s", line); 
                                 wrefresh(chat_win); 
                             }
-                            fclose(result_store);
-
+                            int status=fclose(result_store);
+                            
+                        if (status == -1) 
+                        {
+   
+                         perror("pclose");
+                            exit(1);
+                                    }
                             return 0;
 
                     }

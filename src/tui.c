@@ -43,7 +43,7 @@ int main()
     WINDOW *main_win=create_newwin(input_height, COLS, 15, 0); 
 
     WINDOW *chat_win = newwin(chat_height, COLS, 0, 0);
-    scrollok(chat_win, TRUE);
+    
     wrefresh(chat_win);
 
     
