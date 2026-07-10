@@ -23,17 +23,23 @@ int main()
 
     initscr();
     cbreak();
+
+
     noecho();
+
+
+
+
     keypad(stdscr, TRUE); //功能键 back
     
 
-    int input_height = 5;
-    int status_height = 5;
+    int input_height = 10;
+    int status_height = 10;
     int chat_height = LINES - input_height - status_height;
     
 
-    WINDOW *status_win=create_newwin(status_height, COLS, 0, 0); //创建状态窗口，来保持状态栏
-    WINDOW *main_win=create_newwin(input_height, COLS, 3, 0); //创建主窗口
+    WINDOW *status_win=create_newwin(status_height, COLS, 10, 0); //创建状态窗口，来保持状态栏
+    WINDOW *main_win=create_newwin(input_height, COLS, 15, 0); 
 
     WINDOW *chat_win = newwin(chat_height, COLS, 0, 0);
     scrollok(chat_win, TRUE);
