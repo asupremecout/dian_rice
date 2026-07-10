@@ -98,24 +98,28 @@ int get_input(WINDOW *input_win, WINDOW *chat_win)
                         
 
                         char *filename = buffer + 7; 
-                        //判断filename里面有没有空格,有则有数字
+                        char *word_str ;
                         char *space_str = strchr(filename, ' ');
+
                         if (space_str != NULL) {
                             *space_str = '\0'; 
-                            //char *number_str = space_str + 1; 
+                            
+
+                            word_str= space_str + 1; 
+                            while (*word_str == ' ') {
+                                word_str++; //word str是要写入的内容
+                            }
                         }
                         FILE *fp = fopen(filename, "a");//追加
+                        while(word_str && *word_str != '\0')
+                        {
+                            fputc(*word_str, fp);
+                            word_str++;
+                        }
                         
-                            // 文件读取
-                            char line[MAX_INPUT_LENGTH];
-                            while (fgets(line, sizeof(line), fp) != NULL) 
-                            {
-                                wprintw(chat_win, "%s", line); 
-                                wrefresh(chat_win); 
-                            }
-                            fclose(fp);
-                        
-
+                        fclose(fp);
+                        wprintw(chat_win, "write_success"); 
+                        wrefresh(chat_win); 
                         return 0;
                     }
 
